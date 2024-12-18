@@ -206,7 +206,6 @@ fun TodayWeather(
 
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.align(Alignment.CenterEnd).padding(end = 16.dp)
             ) {
                 Text(
                     text = currentDay.value.minTemp.toFloat().toInt().toString() + "°/",
@@ -445,7 +444,6 @@ fun Panel(isSearchDialogOpen: MutableState<Boolean>, onClickSearch: () -> Unit) 
 
         IconButton(
             modifier = Modifier
-                .align(Alignment.BottomEnd).padding(end = 16.dp),
             onClick = { onClickSearch.invoke() }) {
             Icon(
                 modifier = Modifier.size(30.dp),
