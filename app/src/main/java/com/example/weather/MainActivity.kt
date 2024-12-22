@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -360,7 +361,6 @@ fun WeekWeatherRow(item: WeatherModel) {
         "Overcast" to R.drawable.white_cloud,
         "Partly Cloudy" to R.drawable.partly_cloud,
         "Rainy" to R.drawable.white_cloud_rain_br,
-        //ДОРОБИТИ ІНШІ ІКОНКИ ДО КОЖНОГО ВИДУ ПОГОДИ
         "Light drizzle" to R.drawable.white_cloud_rain_br,
         "Patchy rain nearby" to R.drawable.white_cloud_rain_br,
         "Light freezing rain" to R.drawable.white_cloud_rain_br,
@@ -385,6 +385,7 @@ fun WeekWeatherRow(item: WeatherModel) {
         modifier = Modifier
             .padding(vertical = 8.dp)
             .fillMaxWidth()
+
     ) {
         Text(
             text = formatFromDateToDay(formattedTimeWeek),
@@ -400,13 +401,17 @@ fun WeekWeatherRow(item: WeatherModel) {
             modifier = Modifier
                 .padding(end = 100.dp)
                 .size(30.dp)
+                .offset(y = 3.dp)
+
+
         )
+
 
         Text(
             text = item.minTemp.toFloat().toInt().toString() + "°/",
             fontSize = 15.sp,
             fontFamily = ubuntuRegular,
-            modifier = Modifier.padding(start = 8.dp),
+            modifier = Modifier.padding(start = 8.dp).width(25.dp),
             color = Color.White
         )
 
@@ -416,7 +421,7 @@ fun WeekWeatherRow(item: WeatherModel) {
             text = item.maxTemp.toFloat().toInt().toString() + "°С",
             fontSize = 15.sp,
             fontFamily = ubuntuBold,
-            modifier = Modifier,
+            modifier = Modifier.width(25.dp),
             color = Color.White
         )
     }

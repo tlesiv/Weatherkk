@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.weather.data.WeatherModel
+import java.time.LocalTime
 
 
 @Composable
@@ -42,6 +43,14 @@ fun MainList(list: List<WeatherModel> , currentDay: MutableState<WeatherModel>){
     }
 }
 
+fun isNightTime(): Boolean {
+    val currentTime = LocalTime.now()
+    val nightStart = LocalTime.of(20, 0) // 22:00
+    val nightEnd = LocalTime.of(5, 0)   // 05:00
+    return currentTime.isAfter(nightStart) || currentTime.isBefore(nightEnd)
+}
+
+
 @Composable
 fun ListItem(item: WeatherModel,  currentDay: MutableState<WeatherModel>) {
 
@@ -50,14 +59,15 @@ fun ListItem(item: WeatherModel,  currentDay: MutableState<WeatherModel>) {
     )
 
     val formattedTime = item.time.split(" ")[1]
+    val isNight = isNightTime()
 
     val weatherIconMap = mapOf(//для заміни на свої іконки
-        "Sunny" to R.drawable.sun,
-        "Clear" to R.drawable.sun,
-        "Cloudy" to R.drawable.white_cloud,
-        "Overcast" to R.drawable.partly_cloud,
-        "Partly Cloudy" to R.drawable.partly_cloud,
-        "Rainy" to R.drawable.white_cloud_rain_br,//тут ті всі іконки доробити до кожної події
+        "Sunny" to if (isNight) R.drawable.moon else R.drawable.sun,//ЗРОБИТИ ЩОБ БУВ МІСЯЦЬ КОЛИ НІЧ
+        "Clear" to if(isNight)  R.drawable.moon else  R.drawable.sun,
+        "Cloudy" to if (isNight) R.drawable.moon else R.drawable.white_cloud,
+        "Overcast" to if (isNight) R.drawable.moon else R.drawable.white_cloud,
+        "Partly Cloudy" to if (isNight) R.drawable.moon else R.drawable.partly_cloud,
+        "Rainy" to R.drawable.white_cloud_rain_br,
         "Light drizzle" to R.drawable.white_cloud_rain_br,
         "Patchy rain nearby" to R.drawable.white_cloud_rain_br,
         "Light freezing rain" to R.drawable.white_cloud_rain_br,
