@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="brownik">#69545453</color><!-- 41%-->
+    <color name="brownik">#4D4D4C</color><!-- 41%-->
     <color name="browni">#545454</color> <!-- 100%-->
 
     <color name="purple_200">#FFBB86FC</color>

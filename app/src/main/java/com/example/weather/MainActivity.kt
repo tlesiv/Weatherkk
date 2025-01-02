@@ -3,6 +3,7 @@ package com.example.weather
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
+import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -22,6 +23,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -57,8 +59,13 @@ import java.util.Locale
 
 const val API_KEY = "e162f19b5aa040cb80e181753241010"
 
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+        )
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
@@ -75,6 +82,7 @@ class MainActivity : ComponentActivity() {
                         "",
                         "0.0",
                         "0.0",
+                        "",
                         ""
                     )
                 )
@@ -86,6 +94,7 @@ class MainActivity : ComponentActivity() {
             WeatherApp(currentDay, daysList, hourlyList, this)
         }
     }
+
 
 
 
@@ -121,8 +130,10 @@ class MainActivity : ComponentActivity() {
                 isSearchDialogOpen = isSearchDialogOpen,
                 onClickSearch = { isSearchDialogOpen.value = true })
             WeekWeather(daysList)
+            WeatherCards(currentDay.value)
             Panel(isSearchDialogOpen = isSearchDialogOpen,
                 onClickSearch = { isSearchDialogOpen.value = true })
+
 
         }
         if (isSearchDialogOpen.value) {
@@ -207,7 +218,9 @@ fun TodayWeather(
 
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.align(Alignment.CenterEnd).padding(end = 16.dp)
+                modifier = Modifier
+                    .align(Alignment.CenterEnd)
+                    .padding(end = 16.dp)
 
             ) {
                 Text(
@@ -226,7 +239,6 @@ fun TodayWeather(
             }
         }
 
-        // Інші елементи TodayWeather
         Text(
             text = currentDay.value.currentTemp.toFloat().toInt().toString() + "°С",
             fontSize = 43.sp,
@@ -411,7 +423,9 @@ fun WeekWeatherRow(item: WeatherModel) {
             text = item.minTemp.toFloat().toInt().toString() + "°/",
             fontSize = 15.sp,
             fontFamily = ubuntuRegular,
-            modifier = Modifier.padding(start = 8.dp).width(25.dp),
+            modifier = Modifier
+                .padding(start = 8.dp)
+                .width(25.dp),//доробити довжину температур
             color = Color.White
         )
 
@@ -421,7 +435,7 @@ fun WeekWeatherRow(item: WeatherModel) {
             text = item.maxTemp.toFloat().toInt().toString() + "°С",
             fontSize = 15.sp,
             fontFamily = ubuntuBold,
-            modifier = Modifier.width(25.dp),
+            modifier = Modifier.width(30.dp),//доробити довжину температур
             color = Color.White
         )
     }
@@ -436,6 +450,123 @@ fun formatFromDateToDay(dateString: String): String {
 
 
 @Composable
+fun WeatherCards(item: WeatherModel) {
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
+
+        // FEELING TEMP
+        Card(
+            modifier = Modifier
+                .size((191.5).dp, (191.5).dp)
+                .padding(start = 20.dp, top = 20.dp)
+                .align(Alignment.TopStart),
+            shape = RoundedCornerShape(16.dp)
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(colorResource(id = R.color.browni))
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(8.dp),
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.test_temp),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(20.dp)
+                                .padding(end = 8.dp)
+                        )
+
+                        Text(
+                            text = "ВІДЧУТТЯ ЯК",
+                            fontSize = 12.sp,
+                            fontFamily = ubuntuBold,
+                            color = Color.Gray,
+                            modifier = Modifier
+                        )
+                    }
+
+                    Text(
+                        text = item.formattedFeelingTemp(),
+                        fontSize = 20.sp,
+                        fontFamily = ubuntuBold,
+                        color = Color.White,
+                        modifier = Modifier.padding(bottom = 4.dp)
+                    )
+
+                    Text(
+                        text = "Фактична: ${item.currentTemp.toFloat().toInt()}°С",
+                        fontSize = 16.sp,
+                        fontFamily = ubuntuBold,
+                        color = Color.LightGray,
+                        modifier = Modifier.padding(bottom = 16.dp)
+                    )
+
+                    val description_of_feeling_temp = when {//ДОРОБИТИ БО ДЕКОЛИ ПРАЦЮЄ НЕКОРЕКТНО
+                        item.formattedFeelingTemp() > item.formattedCurrentTemp() ->
+                            "Погода видається теплішою ніж насправді."
+                        item.formattedFeelingTemp() < item.formattedCurrentTemp() ->
+                            "Через вітер погода видається холоднішою."
+                        else ->
+                            "Збігається зі справжньою температурою."
+                    }
+
+
+
+                    Text(
+                        text = description_of_feeling_temp,
+                        fontSize = 12.sp,
+                        color = Color.White,
+                        fontFamily = ubuntuBold,
+                        modifier = Modifier.padding(bottom = 8.dp))
+                }
+            }
+        }
+
+
+
+
+
+            //WIND
+            Card(
+                modifier = Modifier
+                    .size((191.5).dp, (191.5).dp)
+                    .padding(end = 20.dp, top = 20.dp)
+                    .align(Alignment.TopEnd),
+                shape = RoundedCornerShape(16.dp)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(
+                            colorResource(id = R.color.browni)
+                        )
+                ) {
+                    // Вміст картки
+                    Text(
+                        text = "1°C",
+                        fontSize = 20.sp,
+                        color = Color.White,
+                        modifier = Modifier.align(Alignment.TopStart)
+                    )
+                }
+            }
+
+}
+    }
+
+
+
+
+@Composable
 fun Panel(isSearchDialogOpen: MutableState<Boolean>, onClickSearch: () -> Unit) {
     Box(modifier = Modifier.fillMaxSize())
     {
@@ -443,14 +574,16 @@ fun Panel(isSearchDialogOpen: MutableState<Boolean>, onClickSearch: () -> Unit) 
             painter = painterResource(id = R.drawable.panel),
             contentDescription = null,
             modifier = Modifier
-                .width(1000.dp)
+                .fillMaxWidth()
                 .align(Alignment.BottomCenter)
                 .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp, bottomStart = 0.dp)),
             contentScale = ContentScale.Crop
         )
 
         IconButton(
-            modifier = Modifier.align(Alignment.BottomEnd).padding(end = 16.dp),
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(end = 16.dp),
             onClick = { onClickSearch.invoke() }) {
             Icon(
                 modifier = Modifier.size(30.dp),
@@ -531,14 +664,16 @@ private fun getWeatherByDays(response: String): List<WeatherModel> {
                     .getString("icon"),
                 item.getJSONObject("day").getString("maxtemp_c"),
                 item.getJSONObject("day").getString("mintemp_c"),
-                item.getJSONArray("hour").toString()
+                item.getJSONArray("hour").toString(),
+                ""
 
             )
         )
     }
     list[0] = list[0].copy(
         time = mainObject.getJSONObject("current").getString("last_updated"),
-        currentTemp = mainObject.getJSONObject("current").getString("temp_c")
+        currentTemp = mainObject.getJSONObject("current").getString("temp_c"),
+        feelslike_c = mainObject.getJSONObject("current").getString("feelslike_c")
     )
     return list
 }
@@ -557,6 +692,7 @@ private fun getWeatherByHours(hours: String): List<WeatherModel> {
                 item.getString("temp_c").toFloat().toInt().toString() + "ºC",
                 item.getJSONObject("condition").getString("text"),
                 item.getJSONObject("condition").getString("icon"),
+                "",
                 "",
                 "",
                 ""
