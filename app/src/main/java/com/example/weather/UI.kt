@@ -62,11 +62,14 @@ fun ListItem(item: WeatherModel,  currentDay: MutableState<WeatherModel>) {
     val isNight = isNightTime()
 
     val weatherIconMap = mapOf(//для заміни на свої іконки
-        "Sunny" to if (isNight) R.drawable.moon else R.drawable.sun,//ЗРОБИТИ ЩОБ БУВ МІСЯЦЬ КОЛИ НІЧ
-        "Clear" to if(isNight)  R.drawable.moon else  R.drawable.sun,
-        "Cloudy" to if (isNight) R.drawable.moon else R.drawable.white_cloud,
-        "Overcast" to if (isNight) R.drawable.moon else R.drawable.white_cloud,
-        "Partly Cloudy" to if (isNight) R.drawable.moon else R.drawable.partly_cloud,
+        "Sunny" to  R.drawable.sun,//ЗРОБИТИ ЩОБ БУВ МІСЯЦЬ КОЛИ НІЧ
+        //"Sunny" to if (isNight) R.drawable.moon else R.drawable.sun,//ЗРОБИТИ ЩОБ БУВ МІСЯЦЬ КОЛИ НІЧ
+        "Clear" to  R.drawable.sun,
+        //"Clear" to if(isNight)  R.drawable.moon else  R.drawable.sun,
+        "Cloudy" to  R.drawable.white_cloud,
+        "Overcast" to  R.drawable.white_cloud,
+        "Partly Cloudy" to  R.drawable.partly_cloud,
+       //"Partly Cloudy" to if (isNight) R.drawable.moon else R.drawable.partly_cloud,
         "Rainy" to R.drawable.white_cloud_rain_br,
         "Light drizzle" to R.drawable.white_cloud_rain_br,
         "Patchy rain nearby" to R.drawable.white_cloud_rain_br,
@@ -134,7 +137,7 @@ fun DialogSearch(
         },
         title = {
             Column(modifier = Modifier.fillMaxWidth()) {
-                Text(text = "Please enter the name of the city: ")
+                Text(text = "Введіть назву міста: ")
                 TextField(
                     value = text,
                     onValueChange = { newText -> text = newText }

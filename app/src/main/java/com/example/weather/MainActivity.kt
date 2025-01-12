@@ -9,6 +9,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -22,9 +23,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -42,6 +45,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -83,6 +87,10 @@ class MainActivity : ComponentActivity() {
                         "0.0",
                         "0.0",
                         "",
+                        "",
+                        "",
+                        "",
+                        "",
                         ""
                     )
                 )
@@ -96,9 +104,6 @@ class MainActivity : ComponentActivity() {
     }
 
 
-
-
-
     @Composable
     fun WeatherApp(
         currentDay: MutableState<WeatherModel>,
@@ -108,9 +113,8 @@ class MainActivity : ComponentActivity() {
     ) {
         val isSearchDialogOpen = remember { mutableStateOf(false) }
 
-
-        Box(modifier = Modifier.fillMaxSize())
-        {
+        // Фон
+        Box(modifier = Modifier.fillMaxSize()) {
             Image(
                 painter = painterResource(id = R.drawable.ic_launcher2k_background),
                 contentDescription = null,
@@ -122,20 +126,21 @@ class MainActivity : ComponentActivity() {
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .verticalScroll(rememberScrollState()) // Додано вертикальну прокрутку
         ) {
             TodayWeather(
                 currentDay,
                 daysList,
                 hourlyList,
                 isSearchDialogOpen = isSearchDialogOpen,
-                onClickSearch = { isSearchDialogOpen.value = true })
+                onClickSearch = { isSearchDialogOpen.value = true }
+            )
             WeekWeather(daysList)
             WeatherCards(currentDay.value)
-            Panel(isSearchDialogOpen = isSearchDialogOpen,
-                onClickSearch = { isSearchDialogOpen.value = true })
-
 
         }
+
+        // Діалог пошуку
         if (isSearchDialogOpen.value) {
             DialogSearch(
                 onDismiss = { isSearchDialogOpen.value = false },
@@ -148,7 +153,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-val ubuntuLight: FontFamily = FontFamily(
+    val ubuntuLight: FontFamily = FontFamily(
     Font(R.font.ubuntu_light, weight = FontWeight.Light)
 )
 val ubuntuRegular: FontFamily = FontFamily(
@@ -157,7 +162,6 @@ val ubuntuRegular: FontFamily = FontFamily(
 val ubuntuBold: FontFamily = FontFamily(
     Font(R.font.ubuntu_bold, weight = FontWeight.Bold)
 )
-
 
 
 @Composable
@@ -173,6 +177,7 @@ fun TodayWeather(
         modifier = Modifier
             .padding(top = 45.dp)
             .fillMaxWidth()
+
     ) {
 
         Box(
@@ -338,7 +343,7 @@ fun WeekWeather(daysList: MutableState<List<WeatherModel>>) {
                 color = Color.Gray
             )
         }
-        Divider(
+        HorizontalDivider(
             color = Color.LightGray,
             modifier = Modifier
                 .fillMaxWidth()
@@ -351,7 +356,7 @@ fun WeekWeather(daysList: MutableState<List<WeatherModel>>) {
             WeekWeatherRow(item)
 
             if (index != daysList.value.size - 1) { // перевірка на останній елемент
-                Divider( // лінія для розмежування елементів
+                HorizontalDivider( // лінія для розмежування елементів
                     color = Color.LightGray,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -403,7 +408,7 @@ fun WeekWeatherRow(item: WeatherModel) {
             text = formatFromDateToDay(formattedTimeWeek),
             fontSize = 15.sp,
             fontFamily = ubuntuBold,
-            modifier = Modifier.weight(1f),
+            modifier = Modifier.weight(0.4f),
             color = Color.White,
         )
 
@@ -411,9 +416,9 @@ fun WeekWeatherRow(item: WeatherModel) {
             model = iconResource,
             contentDescription = null,
             modifier = Modifier
-                .padding(end = 100.dp)
+                .weight(0.5f)
                 .size(30.dp)
-                .offset(y = 3.dp)
+                .offset(y = 2.dp)
 
 
         )
@@ -425,8 +430,9 @@ fun WeekWeatherRow(item: WeatherModel) {
             fontFamily = ubuntuRegular,
             modifier = Modifier
                 .padding(start = 8.dp)
-                .width(25.dp),//доробити довжину температур
-            color = Color.White
+                .width(35.dp),
+            color = Color.White,
+            textAlign = TextAlign.Center
         )
 
 
@@ -435,8 +441,9 @@ fun WeekWeatherRow(item: WeatherModel) {
             text = item.maxTemp.toFloat().toInt().toString() + "°С",
             fontSize = 15.sp,
             fontFamily = ubuntuBold,
-            modifier = Modifier.width(30.dp),//доробити довжину температур
-            color = Color.White
+            modifier = Modifier.width(35.dp),//доробити довжину температур
+            color = Color.White,
+            textAlign = TextAlign.Center
         )
     }
 }
@@ -454,114 +461,327 @@ fun WeatherCards(item: WeatherModel) {
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
-
-        // FEELING TEMP
-        Card(
+        Column(
             modifier = Modifier
-                .size((191.5).dp, (191.5).dp)
-                .padding(start = 20.dp, top = 20.dp)
-                .align(Alignment.TopStart),
-            shape = RoundedCornerShape(16.dp)
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
-            Box(
+            Row(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .background(colorResource(id = R.color.browni))
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Column(
+                // FEELING TEMP
+                Card(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .padding(8.dp),
+                        .size(191.8.dp)
+                        .padding(start = 20.dp, top = 20.dp),
+                    shape = RoundedCornerShape(16.dp)
                 ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.padding(bottom = 8.dp)
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(colorResource(id = R.color.browni))
                     ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.test_temp),
-                            contentDescription = null,
+                        Column(
                             modifier = Modifier
-                                .size(20.dp)
-                                .padding(end = 8.dp)
-                        )
+                                .fillMaxSize()
+                                .padding(8.dp),
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.padding(bottom = 8.dp)
+                            ) {
+                                Image(
+                                    painter = painterResource(id = R.drawable.temperature),
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .size(20.dp)
+                                        .padding(end = 8.dp)
+                                )
+
+                                Text(
+                                    text = "ВІДЧУТТЯ ЯК",
+                                    fontSize = 12.sp,
+                                    fontFamily = ubuntuBold,
+                                    color = Color.Gray
+                                )
+                            }
+
+                            Text(
+                                text = item.formattedFeelingTemp() + "°С",
+                                fontSize = 25.sp,
+                                fontFamily = ubuntuBold,
+                                color = Color.White,
+                                modifier = Modifier.padding(bottom = 4.dp)
+                            )
+
+                            Text(
+                                text = "Фактична: ${item.currentTemp.toFloat().toInt()}°С",
+                                fontSize = 16.sp,
+                                fontFamily = ubuntuBold,
+                                color = Color.LightGray,
+                                modifier = Modifier.padding(bottom = 16.dp)
+                            )
+                        }
+
+                        val feelsLikeRounded = item.feelslike_c?.toFloatOrNull()?.toInt()
+                        val currentTempRounded = item.currentTemp?.toFloatOrNull()?.toInt()
+
+                        val description_of_filling_temp = when {
+                            feelsLikeRounded == null || currentTempRounded == null ->
+                                "Дані про температуру наразі недоступні."
+
+                            feelsLikeRounded > currentTempRounded ->
+                                "Погода видається теплішою ніж насправді."
+
+                            feelsLikeRounded < currentTempRounded ->
+                                "Через вітер погода видається холоднішою."
+
+                            else ->
+                                "Збігається зі справжньою температурою."
+                        }
 
                         Text(
-                            text = "ВІДЧУТТЯ ЯК",
+                            text = description_of_filling_temp,
                             fontSize = 12.sp,
+                            color = Color.White,
                             fontFamily = ubuntuBold,
-                            color = Color.Gray,
                             modifier = Modifier
+                                .padding(start = 8.dp, bottom = 20.dp)
+                                .align(Alignment.BottomStart)
                         )
                     }
+                }
 
-                    Text(
-                        text = item.formattedFeelingTemp(),
-                        fontSize = 20.sp,
-                        fontFamily = ubuntuBold,
-                        color = Color.White,
-                        modifier = Modifier.padding(bottom = 4.dp)
-                    )
+                // VISIBILITY
+                Card(
+                    modifier = Modifier
+                        .size(191.8.dp)
+                        .padding(end = 20.dp, top = 20.dp),
+                    shape = RoundedCornerShape(16.dp)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(colorResource(id = R.color.browni))
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(8.dp),
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.padding(bottom = 8.dp)
+                            ) {
+                                Image(
+                                    painter = painterResource(id = R.drawable.visibility__2_),
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .size(25.dp)
+                                        .padding(end = 8.dp)
+                                )
 
-                    Text(
-                        text = "Фактична: ${item.currentTemp.toFloat().toInt()}°С",
-                        fontSize = 16.sp,
-                        fontFamily = ubuntuBold,
-                        color = Color.LightGray,
-                        modifier = Modifier.padding(bottom = 16.dp)
-                    )
+                                Text(
+                                    text = "ВИДИМІСТЬ",
+                                    fontSize = 12.sp,
+                                    fontFamily = ubuntuBold,
+                                    color = Color.Gray
+                                )
+                            }
 
-                    val description_of_feeling_temp = when {//ДОРОБИТИ БО ДЕКОЛИ ПРАЦЮЄ НЕКОРЕКТНО
-                        item.formattedFeelingTemp() > item.formattedCurrentTemp() ->
-                            "Погода видається теплішою ніж насправді."
-                        item.formattedFeelingTemp() < item.formattedCurrentTemp() ->
-                            "Через вітер погода видається холоднішою."
-                        else ->
-                            "Збігається зі справжньою температурою."
+                            Text(
+                                text = item.formattedVisibilityKm() + " км",
+                                fontSize = 25.sp,
+                                fontFamily = ubuntuBold,
+                                color = Color.White,
+                                modifier = Modifier.padding(bottom = 4.dp)
+                            )
+                        }
+
+                        val vis = item.vis_km?.toFloatOrNull()?.toInt()
+
+                        val description_of_visibility = when {
+                            vis == null -> "Дані про видимість недоступні."
+                            vis > 15 -> "Абсолютно ясно."
+                            vis in 10..15 -> "Ясно."
+                            vis in 5..9 -> "Легка імла зараз зменшує видимість."
+                            else -> "Видимість дуже низька."
+                        }
+
+                        Text(
+                            text = description_of_visibility,
+                            fontSize = 12.sp,
+                            color = Color.White,
+                            fontFamily = ubuntuBold,
+                            modifier = Modifier
+                                .align(Alignment.BottomStart)
+                                .padding(start = 8.dp, bottom = 20.dp)
+                        )
                     }
-
-
-
-                    Text(
-                        text = description_of_feeling_temp,
-                        fontSize = 12.sp,
-                        color = Color.White,
-                        fontFamily = ubuntuBold,
-                        modifier = Modifier.padding(bottom = 8.dp))
                 }
             }
-        }
 
-
-
-
-
-            //WIND
+            // WIND
             Card(
                 modifier = Modifier
-                    .size((191.5).dp, (191.5).dp)
-                    .padding(end = 20.dp, top = 20.dp)
-                    .align(Alignment.TopEnd),
+                    .fillMaxWidth()
+                    .height(191.8.dp)
+                    .padding(end = 20.dp, start = 20.dp, top = 20.dp),
                 shape = RoundedCornerShape(16.dp)
             ) {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(
-                            colorResource(id = R.color.browni)
-                        )
+                        .background(colorResource(id = R.color.brownik))
                 ) {
-                    // Вміст картки
-                    Text(
-                        text = "1°C",
-                        fontSize = 20.sp,
-                        color = Color.White,
-                        modifier = Modifier.align(Alignment.TopStart)
-                    )
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(16.dp),
+
+                        ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        ) {
+
+
+                            Image(
+                                painter = painterResource(id = R.drawable.wind_test),
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .size(25.dp)
+                                    .padding(end = 8.dp)
+                            )
+                            Text(
+                                text = "ВІТЕР",
+                                fontSize = 12.sp,
+                                fontFamily = ubuntuBold,
+                                color = Color.Gray
+                            )
+                        }
+
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                text = "Вітер",
+                                fontSize = 16.sp,
+                                fontFamily = ubuntuBold,
+                                color = Color.White
+                            )
+                            Text(
+                                text = item.formattedWindKMToMc + " м/с",
+                                fontSize = 16.sp,
+                                fontFamily = ubuntuBold,
+                                color = Color.White
+                            )
+
+                        }
+
+                        HorizontalDivider(
+                            color = Color.LightGray,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height((0.2).dp)
+
+                        )
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth().padding(top = 8.dp, bottom = 8.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                text = "Пориви",
+                                fontSize = 16.sp,
+                                fontFamily = ubuntuBold,
+                                color = Color.White
+                            )
+                            Text(
+                                text = item.formattedGustKMToMc + " м/с",
+                                fontSize = 16.sp,
+                                fontFamily = ubuntuBold,
+                                color = Color.White
+                            )
+
+                        }
+
+                        HorizontalDivider(
+                            color = Color.LightGray,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height((0.2).dp)
+
+                        )
+
+                        val WindDirToUA = mapOf(
+                            "N" to "Північ",
+                            "NE" to "Північ-Схід",
+                            "E" to "Схід",
+                            "SE" to "Південь-Схід",
+                            "S" to "Південь",
+                            "SW" to "Південь-Захід",
+                            "W" to "Захід",
+                            "NW" to "Північ-Захід",
+                            "NNE" to "Північ-Північ-Схід",
+                            "ENE" to "Схід-Північ-Схід",
+                            "ESE" to "Схід-Південь-Схід",
+                            "SSE" to "Південь-Південь-Схід",
+                            "SSW" to "Південь-Південь-Захід",
+                            "WSW" to "Захід-Південь-Захід",
+                            "WNW" to "Захід-Північ-Захід",
+                            "NNW" to "Північ-Північ-Захід"
+
+                            // "N" to "Пн",
+                            // "NE" to "ПнСх",
+                            // "E" to "Сх",
+                            //"SE" to "ПдСх",
+                            //"S" to "Пд",
+                            // "SW" to "ПдЗх",
+                            // "W" to "Зх",
+                            //  "NW" to "ПнЗх",
+                            // "NNE" to "ПнПнСх",
+                            // "ENE" to "СхПнСх",
+                            //  "ESE" to "СхПдСх",
+                            //  "SSE" to "ПдПдСх",
+                            //  "SSW" to "ПдПдЗх",
+                            // "WSW" to "ЗхПдЗх",
+                            // "WNW" to "ЗхПнЗх",
+                            //  "NNW" to "ПнПнЗх",
+
+                        )
+                        val normalizedWindDir = item.wind_dir.trim()
+                        val defaultWindDir = WindDirToUA[normalizedWindDir] ?: "Невідомо"
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                text = "Напрямок",
+                                fontSize = 16.sp,
+                                fontFamily = ubuntuBold,
+                                color = Color.White
+                            )
+                            Text(
+                                text = defaultWindDir,
+                                fontSize = 16.sp,
+                                fontFamily = ubuntuBold,
+                                color = Color.White
+                            )
+                        }
+                    }
                 }
             }
 
-}
+        }
     }
+}
+
 
 
 
@@ -607,10 +827,6 @@ fun Panel(isSearchDialogOpen: MutableState<Boolean>, onClickSearch: () -> Unit) 
     }
 
 }
-
-
-
-
 
 
 private fun getData(
@@ -665,6 +881,10 @@ private fun getWeatherByDays(response: String): List<WeatherModel> {
                 item.getJSONObject("day").getString("maxtemp_c"),
                 item.getJSONObject("day").getString("mintemp_c"),
                 item.getJSONArray("hour").toString(),
+                "",
+                "",
+                "",
+                "",
                 ""
 
             )
@@ -673,7 +893,11 @@ private fun getWeatherByDays(response: String): List<WeatherModel> {
     list[0] = list[0].copy(
         time = mainObject.getJSONObject("current").getString("last_updated"),
         currentTemp = mainObject.getJSONObject("current").getString("temp_c"),
-        feelslike_c = mainObject.getJSONObject("current").getString("feelslike_c")
+        feelslike_c = mainObject.getJSONObject("current").getString("feelslike_c"),
+        vis_km = mainObject.getJSONObject("current").getString("vis_km"),
+        wind_kph = mainObject.getJSONObject("current").getString("wind_kph"),
+        gust_kph = mainObject.getJSONObject("current").getString("gust_kph"),
+        wind_dir = mainObject.getJSONObject("current").getString("wind_dir"),
     )
     return list
 }
@@ -692,6 +916,10 @@ private fun getWeatherByHours(hours: String): List<WeatherModel> {
                 item.getString("temp_c").toFloat().toInt().toString() + "ºC",
                 item.getJSONObject("condition").getString("text"),
                 item.getJSONObject("condition").getString("icon"),
+                "",
+                "",
+                "",
+                "",
                 "",
                 "",
                 "",
