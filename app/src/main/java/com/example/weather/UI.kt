@@ -1,6 +1,8 @@
 package com.example.weather
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -8,7 +10,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -20,8 +25,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -59,15 +67,15 @@ fun ListItem(item: WeatherModel,  currentDay: MutableState<WeatherModel>) {
     )
 
     val formattedTime = item.time.split(" ")[1]
-    val isNight = isNightTime()
+    val isNight = item.is_day?.toIntOrNull() == 0
 
     val weatherIconMap = mapOf(//для заміни на свої іконки
-        "Sunny" to  R.drawable.sun,//ЗРОБИТИ ЩОБ БУВ МІСЯЦЬ КОЛИ НІЧ
-        //"Sunny" to if (isNight) R.drawable.moon else R.drawable.sun,//ЗРОБИТИ ЩОБ БУВ МІСЯЦЬ КОЛИ НІЧ
+        "Sunny" to  R.drawable.sun,
+        //"Sunny" to if (isNight) R.drawable.moon else R.drawable.sun,
         "Clear" to  R.drawable.sun,
         //"Clear" to if(isNight)  R.drawable.moon else  R.drawable.sun,
-        "Cloudy" to  R.drawable.white_cloud,
-        "Overcast" to  R.drawable.white_cloud,
+        "Cloudy" to R.drawable.white_cloud,
+        "Overcast" to R.drawable.white_cloud,
         "Partly Cloudy" to  R.drawable.partly_cloud,
        //"Partly Cloudy" to if (isNight) R.drawable.moon else R.drawable.partly_cloud,
         "Rainy" to R.drawable.white_cloud_rain_br,
@@ -145,6 +153,48 @@ fun DialogSearch(
             }
         }
     )
+}
+
+@Composable
+fun Panel(isSearchDialogOpen: MutableState<Boolean>, onClickSearch: () -> Unit) {
+    Box(modifier = Modifier.fillMaxSize())
+    {
+        Image(
+            painter = painterResource(id = R.drawable.panel),
+            contentDescription = null,
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.BottomCenter)
+                .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp, bottomStart = 0.dp)),
+            contentScale = ContentScale.Crop
+        )
+
+        IconButton(
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(end = 16.dp),
+            onClick = { onClickSearch.invoke() }) {
+            Icon(
+                modifier = Modifier.size(30.dp),
+                painter = painterResource(id = R.drawable.search),
+                contentDescription = null,
+                tint = Color.White
+            )
+
+
+
+            if (isSearchDialogOpen.value) {
+                DialogSearch(
+                    onDismiss = { isSearchDialogOpen.value = false },
+                    onConfirm = { city ->
+                        isSearchDialogOpen.value = false
+                    })
+
+            }
+        }
+
+    }
+
 }
 
 
