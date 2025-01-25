@@ -243,7 +243,7 @@ fun WeatherCards(item: WeatherModel) {
 
 
                             Image(
-                                painter = painterResource(id = R.drawable.wind_test),
+                                painter = painterResource(id = R.drawable.wind),
                                 contentDescription = null,
                                 modifier = Modifier
                                     .size(25.dp)
@@ -405,15 +405,18 @@ fun WeatherCards(item: WeatherModel) {
                     "${item.formattedTotalPrecipMm()} мм"
                 }
 
-                val snow = item.totalsnow_cm.toIntOrNull() ?: 0
-                val precip = item.totalprecip_mm.toIntOrNull() ?: 0
+                val snow = item.formattedTotalSnowCm().toIntOrNull() ?: 0
+                val precip = item.formattedTotalPrecipMm().toIntOrNull() ?: 0
+
 
                 val desc = when {
-                    snow > 0 -> "Сьогодні сніжно"
-                    precip > 0 -> "Є опади"
-                    snow == 0 && precip == 0 -> "Сьогодні без опадів"
+                    snow > 0 && precip > 0 -> "Сьогодні сніг з дощем."
+                    snow > 0 -> "Сьогодні сніжно."
+                    precip > 0 -> "Сьогодні дощить."//мб щось інше
+                    snow == 0 && precip == 0 -> "Сьогодні без опадів."
                     else -> ""
                 }
+
 
 
 
@@ -439,10 +442,10 @@ fun WeatherCards(item: WeatherModel) {
                                 modifier = Modifier.padding(bottom = 8.dp)
                             ) {
                                 Image(
-                                    painter = painterResource(id = R.drawable.snowflake),
+                                    painter = painterResource(id = R.drawable.water_drop),
                                     contentDescription = null,
                                     modifier = Modifier
-                                        .size(20.dp)
+                                        .size(18.dp)
                                         .padding(end = 8.dp)
                                 )
 
@@ -500,7 +503,7 @@ fun WeatherCards(item: WeatherModel) {
                                 modifier = Modifier.padding(bottom = 8.dp)
                             ) {
                                 Image(
-                                    painter = painterResource(id = R.drawable.visibility__2_),
+                                    painter = painterResource(id = R.drawable.visibility),
                                     contentDescription = null,
                                     modifier = Modifier
                                         .size(25.dp)
