@@ -61,13 +61,19 @@ fun WeatherCards(item: WeatherModel) {
                                 verticalAlignment = Alignment.CenterVertically,
                                 modifier = Modifier.padding(bottom = 8.dp)
                             ) {
-                                Image(
-                                    painter = painterResource(id = R.drawable.temperature),
-                                    contentDescription = null,
+                                Box(
                                     modifier = Modifier
-                                        .size(20.dp)
-                                        .padding(end = 8.dp)
-                                )
+                                        .size(25.dp),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Image(
+                                        painter = painterResource(id = R.drawable.temperature),
+                                        contentDescription = null,
+                                        modifier = Modifier
+                                            .size(20.dp)
+                                            .padding(end = 8.dp)
+                                    )
+                                }
 
                                 Text(
                                     text = "ВІДЧУТТЯ ЯК",
@@ -144,13 +150,20 @@ fun WeatherCards(item: WeatherModel) {
                                 verticalAlignment = Alignment.CenterVertically,
                                 modifier = Modifier.padding(bottom = 8.dp)
                             ) {
-                                Image(
-                                    painter = painterResource(id = R.drawable.uv_sun2),
-                                    contentDescription = null,
+
+                                Box(
                                     modifier = Modifier
-                                        .size(20.dp)//або 25
-                                        .padding(end = 8.dp)
-                                )
+                                        .size(25.dp),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Image(
+                                        painter = painterResource(id = R.drawable.uv_sun2),
+                                        contentDescription = null,
+                                        modifier = Modifier
+                                            .size(25.dp)//або 25
+                                            .padding(end = 8.dp)
+                                    )
+                                }
 
                                 Text(
                                     text = "ІНДЕКС УФ",
@@ -441,13 +454,20 @@ fun WeatherCards(item: WeatherModel) {
                                 verticalAlignment = Alignment.CenterVertically,
                                 modifier = Modifier.padding(bottom = 8.dp)
                             ) {
-                                Image(
-                                    painter = painterResource(id = R.drawable.water_drop),
-                                    contentDescription = null,
+
+                                Box(
                                     modifier = Modifier
-                                        .size(18.dp)
-                                        .padding(end = 8.dp)
-                                )
+                                        .size(25.dp),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Image(
+                                        painter = painterResource(id = R.drawable.water_drop),
+                                        contentDescription = null,
+                                        modifier = Modifier
+                                            .size(18.dp)
+                                            .padding(end = 8.dp)
+                                    )
+                                }
 
                                 Text(
                                     text = "ОПАДИ",
@@ -502,13 +522,20 @@ fun WeatherCards(item: WeatherModel) {
                                 verticalAlignment = Alignment.CenterVertically,
                                 modifier = Modifier.padding(bottom = 8.dp)
                             ) {
-                                Image(
-                                    painter = painterResource(id = R.drawable.visibility),
-                                    contentDescription = null,
+
+                                Box(
                                     modifier = Modifier
-                                        .size(25.dp)
-                                        .padding(end = 8.dp)
-                                )
+                                        .size(25.dp),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Image(
+                                        painter = painterResource(id = R.drawable.visibility),
+                                        contentDescription = null,
+                                        modifier = Modifier
+                                            .size(28.dp)
+                                            .padding(end = 8.dp)
+                                    )
+                                }
 
                                 Text(
                                     text = "ВИДИМІСТЬ",
@@ -578,13 +605,20 @@ fun WeatherCards(item: WeatherModel) {
                                 verticalAlignment = Alignment.CenterVertically,
                                 modifier = Modifier.padding(bottom = 8.dp)
                             ) {
-                                Image(
-                                    painter = painterResource(id = R.drawable.ttt),
-                                    contentDescription = null,
+
+                                Box(
                                     modifier = Modifier
-                                        .size(20.dp)
-                                        .padding(end = 8.dp)
-                                )
+                                        .size(25.dp),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Image(
+                                        painter = painterResource(id = R.drawable.pressure),
+                                        contentDescription = null,
+                                        modifier = Modifier
+                                            .size(22.dp)
+                                            .padding(end = 8.dp)
+                                    )
+                                }
 
                                 Text(
                                     text = "ТИСК",
@@ -607,7 +641,7 @@ fun WeatherCards(item: WeatherModel) {
 
 
                         Text(
-                            text = "XXX",
+                            text = "",
                             fontSize = 12.sp,
                             color = Color.White,
                             fontFamily = ubuntuBold,
@@ -639,13 +673,20 @@ fun WeatherCards(item: WeatherModel) {
                                 verticalAlignment = Alignment.CenterVertically,
                                 modifier = Modifier.padding(bottom = 8.dp)
                             ) {
-                                Image(
-                                    painter = painterResource(id = R.drawable.wind_test),
-                                    contentDescription = null,
+
+                                Box(
                                     modifier = Modifier
-                                        .size(25.dp)
-                                        .padding(end = 8.dp)
-                                )
+                                        .size(25.dp),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Image(
+                                        painter = painterResource(id = R.drawable.humidity),
+                                        contentDescription = null,
+                                        modifier = Modifier
+                                            .size(25.dp)
+                                            .padding(end = 8.dp)
+                                    )
+                                }
 
                                 Text(
                                     text = "ВОЛОГІСТЬ",
