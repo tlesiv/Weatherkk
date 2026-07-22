@@ -53,7 +53,7 @@ fun WeekWeather(daysList: MutableState<List<WeatherModel>>) {
                     .padding(end = 8.dp)
             )
             Text(
-                text = "3-ДЕННИЙ ПРОГНОЗ",
+                text = "3-DAY FORECAST",
                 fontSize = 12.sp,
                 fontFamily = ubuntuBold,
                 color = Color.Gray
@@ -71,8 +71,8 @@ fun WeekWeather(daysList: MutableState<List<WeatherModel>>) {
         daysList.value.forEachIndexed { index, item ->
             WeekWeatherRow(item)
 
-            if (index != daysList.value.size - 1) { // перевірка на останній елемент
-                HorizontalDivider( // лінія для розмежування елементів
+            if (index != daysList.value.size - 1) {
+                HorizontalDivider(
                     color = Color.LightGray,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -83,13 +83,14 @@ fun WeekWeather(daysList: MutableState<List<WeatherModel>>) {
     }
 }
 
+
 @Composable
 fun WeekWeatherRow(item: WeatherModel) {
 
+
     val weatherIconMap = mapOf(
-        //для заміни на свої іконки
         "Sunny" to R.drawable.sun,
-        "Clear" to R.drawable.sun,//додумати може
+        "Clear" to R.drawable.sun,
         "Cloudy" to R.drawable.white_cloud,
         "Overcast" to R.drawable.white_cloud,
         "Partly Cloudy" to R.drawable.partly_cloud,
@@ -108,10 +109,10 @@ fun WeekWeatherRow(item: WeatherModel) {
         "Patchy heavy snow" to R.drawable.snowflake,
         "Moderate snow" to R.drawable.snowflake,
     )
-    val normalizedCondition = item.condition.trim()//видалення пробілів в condition
+    val normalizedCondition = item.condition.trim()
     val iconResource = weatherIconMap[normalizedCondition] ?: R.drawable.white_cloud
 
-    val formattedTimeWeek = item.time.split(" ")[0]
+    val formattedDate = item.time.split(" ")[0]
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -121,7 +122,7 @@ fun WeekWeatherRow(item: WeatherModel) {
 
     ) {
         Text(
-            text = formatFromDateToDay(formattedTimeWeek),
+            text = formatFromDateToDay(formattedDate),
             fontSize = 15.sp,
             fontFamily = ubuntuBold,
             modifier = Modifier.weight(0.4f),
@@ -139,7 +140,6 @@ fun WeekWeatherRow(item: WeatherModel) {
 
         )
 
-
         Text(
             text = item.minTemp.toFloat().toInt().toString() + "°/",
             fontSize = 15.sp,
@@ -151,13 +151,11 @@ fun WeekWeatherRow(item: WeatherModel) {
             textAlign = TextAlign.Center
         )
 
-
-
         Text(
-            text = item.maxTemp.toFloat().toInt().toString() + "°С",
+            text = item.maxTemp.toFloat().toInt().toString() + "°C",
             fontSize = 15.sp,
             fontFamily = ubuntuBold,
-            modifier = Modifier.width(35.dp),//доробити довжину температур
+            modifier = Modifier.width(35.dp),
             color = Color.White,
             textAlign = TextAlign.Center
         )
@@ -165,8 +163,7 @@ fun WeekWeatherRow(item: WeatherModel) {
 }
 
 fun formatFromDateToDay(dateString: String): String {
-    // Парсимо рядок дати у форматі LocalDate
     val date = LocalDate.parse(dateString, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-    // Отримуємо назву дня тижня та повертаємо у бажаному форматі
     return date.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.ENGLISH)
+        .replaceFirstChar { it.uppercaseChar() }
 }

@@ -76,7 +76,7 @@ fun WeatherCards(item: WeatherModel) {
                                 }
 
                                 Text(
-                                    text = "ВІДЧУТТЯ ЯК",
+                                    text = "FEELS LIKE",
                                     fontSize = 12.sp,
                                     fontFamily = ubuntuBold,
                                     color = Color.Gray
@@ -84,7 +84,7 @@ fun WeatherCards(item: WeatherModel) {
                             }
 
                             Text(
-                                text = item.formattedFeelingTemp() + "°С",
+                                text = item.formattedFeelingTemp() + "°C",
                                 fontSize = 25.sp,
                                 fontFamily = ubuntuBold,
                                 color = Color.White,
@@ -92,7 +92,7 @@ fun WeatherCards(item: WeatherModel) {
                             )
 
                             Text(
-                                text = "Фактична: ${item.currentTemp.toFloat().toInt()}°С",
+                                text = "Actual: ${item.currentTemp.toFloat().toInt()}°C",
                                 fontSize = 16.sp,
                                 fontFamily = ubuntuBold,
                                 color = Color.LightGray,
@@ -103,22 +103,22 @@ fun WeatherCards(item: WeatherModel) {
                         val feelsLikeRounded = item.feelslike_c?.toFloatOrNull()?.toInt()
                         val currentTempRounded = item.currentTemp?.toFloatOrNull()?.toInt()
 
-                        val descriptionOfFillingTemp = when {
+                        val descriptionOfFeelingTemp = when {
                             feelsLikeRounded == null || currentTempRounded == null ->
-                                "Дані про температуру наразі недоступні."
+                                "Temperature data is currently unavailable."
 
                             feelsLikeRounded > currentTempRounded ->
-                                "Погода видається теплішою ніж насправді."
+                                "The weather feels warmer than it actually is."
 
                             feelsLikeRounded < currentTempRounded ->
-                                "Через вітер погода видається холоднішою."
+                                "The wind makes it feel colder."
 
                             else ->
-                                "Збігається зі справжньою температурою."
+                                "Matches the actual air temperature."
                         }
 
                         Text(
-                            text = descriptionOfFillingTemp,
+                            text = descriptionOfFeelingTemp,
                             fontSize = 12.sp,
                             color = Color.White,
                             fontFamily = ubuntuBold,
@@ -129,7 +129,7 @@ fun WeatherCards(item: WeatherModel) {
                     }
                 }
 
-                // ІНДЕКС УФ
+                // UV INDEX
                 Card(
                     modifier = Modifier
                         .size(191.8.dp)
@@ -160,13 +160,13 @@ fun WeatherCards(item: WeatherModel) {
                                         painter = painterResource(id = R.drawable.uv_sun2),
                                         contentDescription = null,
                                         modifier = Modifier
-                                            .size(25.dp)//або 25
+                                            .size(25.dp)
                                             .padding(end = 8.dp)
                                     )
                                 }
 
                                 Text(
-                                    text = "ІНДЕКС УФ",
+                                    text = "UV INDEX",
                                     fontSize = 12.sp,
                                     fontFamily = ubuntuBold,
                                     color = Color.Gray
@@ -185,12 +185,12 @@ fun WeatherCards(item: WeatherModel) {
                             val indexUV = item.uv?.toFloatOrNull()?.toInt()
 
                             val mainDescriptionOfUV = when {
-                                indexUV == null -> "Дані про індекс недоступні"
-                                indexUV > 10 -> "Екстремальний"
-                                indexUV in 8..10 -> "Дуже високий"
-                                indexUV in 6..7 -> "Високий"
-                                indexUV in 3..5 -> "Помірний"
-                                else -> "Низький"
+                                indexUV == null -> "Index data is unavailable"
+                                indexUV > 10 -> "Extreme"
+                                indexUV in 8..10 -> "Very high"
+                                indexUV in 6..7 -> "High"
+                                indexUV in 3..5 -> "Moderate"
+                                else -> "Low"
                             }
 
                             Text(
@@ -204,12 +204,12 @@ fun WeatherCards(item: WeatherModel) {
                         val indexUV = item.uv?.toFloatOrNull()?.toInt()
 
                         val descriptionOfUV = when {
-                            indexUV == null -> "Дані про ультрафіолетовий індекс наразі недоступні."
-                            indexUV > 10 -> "Неодмінно захищайтеся від сонця, максимальний захист обов'язковий!"
-                            indexUV in 8..10 -> "Уникайте перебування на сонці, застосовуйте максимальний захист."
-                            indexUV in 6..7 -> "Уникайте тривалого перебування на сонці."
-                            indexUV in 3..5 -> "Рекомендується використовувати базовий захист від сонця."
-                            else -> "Перебування на сонці наразі безпечне."
+                            indexUV == null -> "UV index data is currently unavailable."
+                            indexUV > 10 -> "Be sure to protect yourself from the sun, maximum protection is a must!"
+                            indexUV in 8..10 -> "Avoid sun exposure, use maximum protection."
+                            indexUV in 6..7 -> "Avoid prolonged sun exposure."
+                            indexUV in 3..5 -> "Basic sun protection is recommended."
+                            else -> "Being in the sun is currently safe."
                         }
 
                         Text(
@@ -246,7 +246,7 @@ fun WeatherCards(item: WeatherModel) {
                                 end = 16.dp,
                                 top = 8.dp,
                                 bottom = 8.dp
-                            ),//або просто padding(16.dp)
+                            ),
 
                     ) {
                         Row(
@@ -263,7 +263,7 @@ fun WeatherCards(item: WeatherModel) {
                                     .padding(end = 8.dp)
                             )
                             Text(
-                                text = "ВІТЕР",
+                                text = "WIND",
                                 fontSize = 12.sp,
                                 fontFamily = ubuntuBold,
                                 color = Color.Gray
@@ -278,18 +278,17 @@ fun WeatherCards(item: WeatherModel) {
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Text(
-                                text = "Вітер",
+                                text = "Wind",
                                 fontSize = 16.sp,
                                 fontFamily = ubuntuBold,
                                 color = Color.White
                             )
                             Text(
-                                text = item.formattedWindKMToMc + " м/с",
+                                text = item.formattedWindKMToMc + " m/s",
                                 fontSize = 16.sp,
                                 fontFamily = ubuntuBold,
                                 color = Color.White
                             )
-
                         }
 
                         HorizontalDivider(
@@ -307,13 +306,13 @@ fun WeatherCards(item: WeatherModel) {
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Text(
-                                text = "Пориви",
+                                text = "Gusts",
                                 fontSize = 16.sp,
                                 fontFamily = ubuntuBold,
                                 color = Color.White
                             )
                             Text(
-                                text = item.formattedGustKMToMc + " м/с",
+                                text = item.formattedGustKMToMc + " m/s",
                                 fontSize = 16.sp,
                                 fontFamily = ubuntuBold,
                                 color = Color.White
@@ -329,44 +328,26 @@ fun WeatherCards(item: WeatherModel) {
 
                         )
 
-                        val windDirToUA = mapOf(
-                            "N" to "Північ",
-                            "NE" to "Північ-Схід",
-                            "E" to "Схід",
-                            "SE" to "Південь-Схід",
-                            "S" to "Південь",
-                            "SW" to "Південь-Захід",
-                            "W" to "Захід",
-                            "NW" to "Північ-Захід",
-                            "NNE" to "Північ-Північ-Схід",
-                            "ENE" to "Схід-Північ-Схід",
-                            "ESE" to "Схід-Південь-Схід",
-                            "SSE" to "Південь-Південь-Схід",
-                            "SSW" to "Південь-Південь-Захід",
-                            "WSW" to "Захід-Південь-Захід",
-                            "WNW" to "Захід-Північ-Захід",
-                            "NNW" to "Північ-Північ-Захід"
-
-                            // "N" to "Пн",
-                            // "NE" to "ПнСх",
-                            // "E" to "Сх",
-                            //"SE" to "ПдСх",
-                            //"S" to "Пд",
-                            // "SW" to "ПдЗх",
-                            // "W" to "Зх",
-                            //  "NW" to "ПнЗх",
-                            // "NNE" to "ПнПнСх",
-                            // "ENE" to "СхПнСх",
-                            //  "ESE" to "СхПдСх",
-                            //  "SSE" to "ПдПдСх",
-                            //  "SSW" to "ПдПдЗх",
-                            // "WSW" to "ЗхПдЗх",
-                            // "WNW" to "ЗхПнЗх",
-                            //  "NNW" to "ПнПнЗх",
-
+                        val windDirToEN = mapOf(
+                            "N" to "North",
+                            "NE" to "Northeast",
+                            "E" to "East",
+                            "SE" to "Southeast",
+                            "S" to "South",
+                            "SW" to "Southwest",
+                            "W" to "West",
+                            "NW" to "Northwest",
+                            "NNE" to "North-Northeast",
+                            "ENE" to "East-Northeast",
+                            "ESE" to "East-Southeast",
+                            "SSE" to "South-Southeast",
+                            "SSW" to "South-Southwest",
+                            "WSW" to "West-Southwest",
+                            "WNW" to "West-Northwest",
+                            "NNW" to "North-Northwest"
                         )
                         val normalizedWindDir = item.wind_dir.trim()
-                        val windDirUA = windDirToUA[normalizedWindDir] ?: "Невідомо"
+                        val windDirEN = windDirToEN[normalizedWindDir] ?: "Unknown"
 
                         Row(
                             modifier = Modifier
@@ -375,13 +356,13 @@ fun WeatherCards(item: WeatherModel) {
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Text(
-                                text = "Напрямок",
+                                text = "Direction",
                                 fontSize = 16.sp,
                                 fontFamily = ubuntuBold,
                                 color = Color.White
                             )
                             Text(
-                                text = windDirUA,
+                                text = windDirEN,
                                 fontSize = 16.sp,
                                 fontFamily = ubuntuBold,
                                 color = Color.White
@@ -397,8 +378,6 @@ fun WeatherCards(item: WeatherModel) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
 
-
-
                 val snowConditions = setOf(
                     "Snow",
                     "Light snow showers",
@@ -413,9 +392,9 @@ fun WeatherCards(item: WeatherModel) {
                 val isSnow = snowConditions.contains(item.condition)
 
                 val snowOrPrecip = if (isSnow) {
-                    "${item.formattedTotalSnowCm()} см"
+                    "${item.formattedTotalSnowCm()} cm"
                 } else {
-                    "${item.formattedTotalPrecipMm()} мм"
+                    "${item.formattedTotalPrecipMm()} mm"
                 }
 
                 val snow = item.formattedTotalSnowCm().toIntOrNull() ?: 0
@@ -423,17 +402,15 @@ fun WeatherCards(item: WeatherModel) {
 
 
                 val desc = when {
-                    snow > 0 && precip > 0 -> "Сьогодні сніг з дощем."
-                    snow > 0 -> "Сьогодні сніжно."
-                    precip > 0 -> "Сьогодні дощить."//мб щось інше
-                    snow == 0 && precip == 0 -> "Сьогодні без опадів."
+                    snow > 0 && precip > 0 -> "Snow mixed with rain today."
+                    snow > 0 -> "Snow today."
+                    precip > 0 -> "Rain today." //maybe something else
+                    snow == 0 && precip == 0 -> "No precipitation today."
                     else -> ""
                 }
 
 
-
-
-                //SNOW,PRECIP
+                // SNOW, PRECIP
                 Card(
                     modifier = Modifier
                         .size(191.8.dp)
@@ -470,7 +447,7 @@ fun WeatherCards(item: WeatherModel) {
                                 }
 
                                 Text(
-                                    text = "ОПАДИ",
+                                    text = "PRECIPITATION",
                                     fontSize = 12.sp,
                                     fontFamily = ubuntuBold,
                                     color = Color.Gray
@@ -486,8 +463,6 @@ fun WeatherCards(item: WeatherModel) {
                             )
 
                         }
-
-
 
                         Text(
                             text = desc,
@@ -516,7 +491,7 @@ fun WeatherCards(item: WeatherModel) {
                         Column(
                             modifier = Modifier
                                 .fillMaxSize()
-                                .padding(8.dp),//
+                                .padding(8.dp), //
                         ) {
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
@@ -538,7 +513,7 @@ fun WeatherCards(item: WeatherModel) {
                                 }
 
                                 Text(
-                                    text = "ВИДИМІСТЬ",
+                                    text = "VISIBILITY",
                                     fontSize = 12.sp,
                                     fontFamily = ubuntuBold,
                                     color = Color.Gray
@@ -546,7 +521,7 @@ fun WeatherCards(item: WeatherModel) {
                             }
 
                             Text(
-                                text = item.formattedVisibilityKm() + " км",
+                                text = item.formattedVisibilityKm() + " km",
                                 fontSize = 25.sp,
                                 fontFamily = ubuntuBold,
                                 color = Color.White,
@@ -557,11 +532,11 @@ fun WeatherCards(item: WeatherModel) {
                         val vis = item.vis_km?.toFloatOrNull()?.toInt()
 
                         val descriptionOfVisibility = when {
-                            vis == null -> "Дані про видимість недоступні."
-                            vis > 15 -> "Абсолютно ясно."
-                            vis in 10..15 -> "Ясно."
-                            vis in 5..9 -> "Легка імла зараз зменшує видимість."
-                            else -> "Видимість дуже низька."
+                            vis == null -> "Visibility data is unavailable."
+                            vis > 15 -> "Absolutely clear."
+                            vis in 10..15 -> "Clear."
+                            vis in 5..9 -> "Light haze is currently reducing visibility."
+                            else -> "Visibility is very low."
                         }
 
                         Text(
@@ -584,7 +559,7 @@ fun WeatherCards(item: WeatherModel) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
 
-                //ТИСК (PRESSURE)
+                // PRESSURE
                 Card(
                     modifier = Modifier
                         .size(191.8.dp)
@@ -621,7 +596,7 @@ fun WeatherCards(item: WeatherModel) {
                                 }
 
                                 Text(
-                                    text = "ТИСК",
+                                    text = "PRESSURE",
                                     fontSize = 12.sp,
                                     fontFamily = ubuntuBold,
                                     color = Color.Gray
@@ -629,7 +604,7 @@ fun WeatherCards(item: WeatherModel) {
                             }
 
                             Text(
-                                text = item.formattedPressureMb() + " гПа",
+                                text = item.formattedPressureMb() + " hPa",
                                 fontSize = 25.sp,
                                 fontFamily = ubuntuBold,
                                 color = Color.White,
@@ -637,8 +612,6 @@ fun WeatherCards(item: WeatherModel) {
                             )
 
                         }
-
-
 
                         Text(
                             text = "",
@@ -652,7 +625,7 @@ fun WeatherCards(item: WeatherModel) {
                     }
                 }
 
-                // HUMIDITY(ВОЛОГІСТЬ)
+                // HUMIDITY
                 Card(
                     modifier = Modifier
                         .size(191.8.dp)
@@ -667,7 +640,7 @@ fun WeatherCards(item: WeatherModel) {
                         Column(
                             modifier = Modifier
                                 .fillMaxSize()
-                                .padding(8.dp),//
+                                .padding(8.dp),
                         ) {
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
@@ -689,7 +662,7 @@ fun WeatherCards(item: WeatherModel) {
                                 }
 
                                 Text(
-                                    text = "ВОЛОГІСТЬ",
+                                    text = "HUMIDITY",
                                     fontSize = 12.sp,
                                     fontFamily = ubuntuBold,
                                     color = Color.Gray
@@ -708,7 +681,7 @@ fun WeatherCards(item: WeatherModel) {
 
 
                         Text(
-                            text = "Точка роси: ${item.dewpoint_c.toFloat().toInt()}°С",
+                            text = "Dew point: ${item.dewpoint_c.toFloat().toInt()}°C",
                             fontSize = 12.sp,
                             color = Color.White,
                             fontFamily = ubuntuBold,
@@ -718,7 +691,11 @@ fun WeatherCards(item: WeatherModel) {
                         )
                     }
                 }
+
+
+
             }
+
         }
 
     }

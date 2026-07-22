@@ -1,5 +1,6 @@
 package com.example.weather
 
+
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -27,6 +28,9 @@ import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.weather.data.WeatherModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -107,7 +111,6 @@ class MainActivity : ComponentActivity() {
         ) {
             TodayWeather(
                 currentDay,
-                daysList,
                 hourlyList,
                 isSearchDialogOpen = isSearchDialogOpen,
                 onClickSearch = { isSearchDialogOpen.value = true }
@@ -141,35 +144,35 @@ val ubuntuBold: FontFamily = FontFamily(
 )
 
 
-private fun getData(
+fun getData(
     city: String, context: Context,
     daysList: MutableState<List<WeatherModel>>,
     currentDay: MutableState<WeatherModel>,
-    hourlyList: MutableState<List<WeatherModel>>,
+    hourlyList: MutableState<List<WeatherModel>>
 ) {
-    val url = "https://api.weatherapi.com/v1/forecast.json?key=$API_KEY" +
-            "&q=$city" +
-            "&days=" +
-            "7" +
-            "&aqi=no&alerts=no"
-    val queue = Volley.newRequestQueue(context)
-    val sRequest = StringRequest(
-        Request.Method.GET,
-        url,
-        { response ->
-            Log.d("MyLog", "Response: $response")
-            val list = getWeatherByDays(response)
-            currentDay.value = list[0]
-            daysList.value = list
+    CoroutineScope(Dispatchers.IO).launch {
+        val url = "https://api.weatherapi.com/v1/forecast.json?key=$API_KEY&q=$city&days=7&aqi=no&alerts=no"
+        val queue = Volley.newRequestQueue(context)
 
-            val hourlyData = getWeatherByHours(list[0].hours)
-            hourlyList.value = hourlyData
-        },
-        {
-            Log.d("MyLog", "VolleyError: $it")
-        }
-    )
-    queue.add(sRequest)
+        val sRequest = StringRequest(Request.Method.GET, url,
+            { response ->
+                Log.d("MyLog", "Response: $response")
+                val list = getWeatherByDays(response)
+
+
+                CoroutineScope(Dispatchers.Main).launch {
+                    currentDay.value = list[0]
+                    daysList.value = list
+                    hourlyList.value = getWeatherByHours(list[0].hours)
+                }
+            },
+            { error ->
+                Log.d("MyLog", "VolleyError: ${error.message}")
+            }
+        )
+
+        queue.add(sRequest)
+    }
 }
 
 private fun getWeatherByDays(response: String): List<WeatherModel> {

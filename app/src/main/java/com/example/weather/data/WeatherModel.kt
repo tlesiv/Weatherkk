@@ -12,159 +12,36 @@ data class WeatherModel(
     val feelslike_c: String,
     val vis_km: String,
     val wind_kph: String,
-    val gust_kph: String,//пориви вітру
-    val wind_dir: String,//напрямок вітру
-    val pressure_mb: String,//тиск
+    val gust_kph: String,
+    val wind_dir: String,
+    val pressure_mb: String,
     val is_day: String,
     val totalsnow_cm: String,
-    val totalprecip_mm: String,//опади в мм
-    val uv: String,//індекс УФ
-    val humidity: String,//вологість
-    val dewpoint_c: String,//точка роси
-
-
-
-
+    val totalprecip_mm: String,
+    val uv: String,
+    val humidity: String,
+    val dewpoint_c: String,
 ) {
-    fun formattedFeelingTemp(): String {
-        return try {
-            if (feelslike_c.isNotEmpty()) {
-                "%.0f".format(feelslike_c.toFloat())
-            } else {
-                "N/A"
-            }
-        } catch (e: NumberFormatException) {
-            "N/A"
-        }
-    }
 
+    private fun formatNumber(value: String): String = value.toFloatOrNull()?.let { "%.0f".format(it) } ?: "N/A"
 
-    fun formattedCurrentTemp(): String {
-        return try {
-            if (currentTemp.isNotEmpty()) {
-                "%.0f".format(currentTemp.toFloat())
-            } else {
-                "N/A"
-            }
-        } catch (e: NumberFormatException) {
-            "N/A"
-        }
-    }
+    fun formattedFeelingTemp(): String = formatNumber(feelslike_c)
 
-    fun formattedVisibilityKm(): String {
-        return try {
-            if (vis_km.isNotEmpty()) {
-                "%.0f".format(vis_km.toFloat())
-            } else {
-                "N/A"
-            }
-        } catch (e: NumberFormatException) {
-            "N/A"
-        }
-    }
+    fun formattedVisibilityKm(): String = formatNumber(vis_km)
 
-    fun formattedPressureMb(): String {
-        return try {
-            if (pressure_mb.isNotEmpty()) {
-                "%.0f".format(pressure_mb.toFloat())
-            } else {
-                "N/A"
-            }
-        } catch (e: NumberFormatException) {
-            "N/A"
-        }
-    }
+    fun formattedPressureMb(): String = formatNumber(pressure_mb)
 
-    fun formattedUV(): String {
-        return try {
-            if (uv.isNotEmpty()) {
-                "%.0f".format(uv.toFloat())
-            } else {
-                "N/A"
-            }
-        } catch (e: NumberFormatException) {
-            "N/A"
-        }
-    }
+    fun formattedUV(): String = formatNumber(uv)
 
-    fun formattedDewpointC(): String {
-        return try {
-            if (dewpoint_c.isNotEmpty()) {
-                "%.0f".format(dewpoint_c.toFloat())
-            } else {
-                "N/A"
-            }
-        } catch (e: NumberFormatException) {
-            "N/A"
-        }
-    }
+    fun formattedTotalSnowCm(): String = formatNumber(totalsnow_cm)
 
-    fun formattedTotalSnowCm(): String {
-        return try {
-            if (totalsnow_cm.isNotEmpty()) {
-                "%.0f".format(totalsnow_cm.toFloat())
-            } else {
-                "N/A"
-            }
-        } catch (e: NumberFormatException) {
-            "N/A"
-        }
-    }
+    fun formattedTotalPrecipMm(): String = formatNumber(totalprecip_mm)
 
-    fun formattedTotalPrecipMm(): String {
-        return try {
-            if (totalprecip_mm.isNotEmpty()) {
-                "%.0f".format(totalprecip_mm.toFloat())
-            } else {
-                "N/A"
-            }
-        } catch (e: NumberFormatException) {
-            "N/A"
-        }
-    }
+    val formattedWindKMToMc: String = wind_kph.toFloatOrNull()
+        ?.let { windKph -> "%.0f".format(windKph / 3.6) }
+        ?: "N/A"
 
-    fun formattedWindKM(): Float? {//зробити ліпше округлення через бібліотеку import kotlin.math.round
-        return try {
-            if (wind_kph.isNotEmpty()) {
-                wind_kph.toFloat()
-            } else {
-                null
-            }
-        } catch (e: NumberFormatException) {
-            null
-        }
-    }
-
-    val formattedWindKMToMc = formattedWindKM()?.let { windKph ->
-        "%.0f".format(windKph / 3.6)
-    } ?: "N/A"
-
-
-    fun formattedGustKM(): Float? {//зробити ліпше округлення через бібліотеку import kotlin.math.round
-        return try {
-            if (gust_kph.isNotEmpty()) {
-                gust_kph.toFloat()
-            } else {
-                null
-            }
-        } catch (e: NumberFormatException) {
-            null
-        }
-    }
-
-    val formattedGustKMToMc = formattedGustKM()?.let { gustKph ->
-        "%.0f".format(gustKph / 3.6)
-    } ?: "N/A"
-
-
-
-
-
-
-
-
+    val formattedGustKMToMc: String = gust_kph.toFloatOrNull()
+        ?.let { gustKph -> "%.0f".format(gustKph / 3.6) }
+        ?: "N/A"
 }
-
-
-
-
