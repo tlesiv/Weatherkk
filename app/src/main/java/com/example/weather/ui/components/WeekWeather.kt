@@ -1,4 +1,4 @@
-package com.example.weather
+package com.example.weather.ui.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -14,7 +14,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -25,14 +24,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.example.weather.data.WeatherModel
+import com.example.weather.R
+import com.example.weather.domain.model.DayForecast
+import com.example.weather.ui.theme.ubuntuBold
+import com.example.weather.ui.theme.ubuntuRegular
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
 import java.util.Locale
+import kotlin.math.roundToInt
 
 @Composable
-fun WeekWeather(daysList: MutableState<List<WeatherModel>>) {
+fun WeekWeather(days: List<DayForecast>) {
     Column(
         modifier = Modifier
             .padding(top = 20.dp, end = 20.dp, start = 20.dp)
@@ -41,88 +44,54 @@ fun WeekWeather(daysList: MutableState<List<WeatherModel>>) {
             .background(colorResource(id = R.color.browni))
             .padding(10.dp)
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-        )
-        {
+        Row(verticalAlignment = Alignment.CenterVertically) {
             Image(
                 painter = painterResource(id = R.drawable.calendar),
                 contentDescription = null,
                 modifier = Modifier
                     .size(20.dp)
-                    .padding(end = 8.dp)
+                    .padding(end = 8.dp),
             )
             Text(
-                text = "3-DAY FORECAST",
+                text = "7-DAY FORECAST",
                 fontSize = 12.sp,
                 fontFamily = ubuntuBold,
-                color = Color.Gray
+                color = Color.Gray,
             )
         }
+
         HorizontalDivider(
             color = Color.LightGray,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(1.dp)
-
+                .height(1.dp),
         )
 
+        days.forEachIndexed { index, day ->
+            WeekWeatherRow(day)
 
-        daysList.value.forEachIndexed { index, item ->
-            WeekWeatherRow(item)
-
-            if (index != daysList.value.size - 1) {
+            if (index != days.size - 1) { // check for the last element
                 HorizontalDivider(
                     color = Color.LightGray,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(1.dp)
+                        .height(1.dp),
                 )
             }
         }
     }
 }
 
-
 @Composable
-fun WeekWeatherRow(item: WeatherModel) {
-
-
-    val weatherIconMap = mapOf(
-        "Sunny" to R.drawable.sun,
-        "Clear" to R.drawable.sun,
-        "Cloudy" to R.drawable.white_cloud,
-        "Overcast" to R.drawable.white_cloud,
-        "Partly Cloudy" to R.drawable.partly_cloud,
-        "Rainy" to R.drawable.white_cloud_rain_br,
-        "Light drizzle" to R.drawable.white_cloud_rain_br,
-        "Patchy rain nearby" to R.drawable.white_cloud_rain_br,
-        "Light freezing rain" to R.drawable.white_cloud_rain_br,
-        "Thunder" to R.drawable.white_cloud_thunder,
-        "Snow" to R.drawable.snowflake,
-        "Light snow showers" to R.drawable.snowflake,
-        "Moderate or heavy snow showers" to R.drawable.snowflake,
-        "Blizzard" to R.drawable.snowflake,
-        "Patchy light snow" to R.drawable.snowflake,
-        "Light snow" to R.drawable.snowflake,
-        "Heavy snow" to R.drawable.snowflake,
-        "Patchy heavy snow" to R.drawable.snowflake,
-        "Moderate snow" to R.drawable.snowflake,
-    )
-    val normalizedCondition = item.condition.trim()
-    val iconResource = weatherIconMap[normalizedCondition] ?: R.drawable.white_cloud
-
-    val formattedDate = item.time.split(" ")[0]
-
+fun WeekWeatherRow(day: DayForecast) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .padding(vertical = 8.dp)
-            .fillMaxWidth()
-
+            .fillMaxWidth(),
     ) {
         Text(
-            text = formatFromDateToDay(formattedDate),
+            text = formatDayName(day.date),
             fontSize = 15.sp,
             fontFamily = ubuntuBold,
             modifier = Modifier.weight(0.4f),
@@ -130,39 +99,37 @@ fun WeekWeatherRow(item: WeatherModel) {
         )
 
         AsyncImage(
-            model = iconResource,
+            model = weatherIconFor(day.condition),
             contentDescription = null,
             modifier = Modifier
                 .weight(0.5f)
                 .size(30.dp)
-                .offset(y = 2.dp)
-
-
+                .offset(y = 2.dp),
         )
 
         Text(
-            text = item.minTemp.toFloat().toInt().toString() + "°/",
+            text = "${day.minTempC.roundToInt()}°/",
             fontSize = 15.sp,
             fontFamily = ubuntuRegular,
             modifier = Modifier
                 .padding(start = 8.dp)
                 .width(35.dp),
             color = Color.White,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
         )
 
         Text(
-            text = item.maxTemp.toFloat().toInt().toString() + "°C",
+            text = "${day.maxTempC.roundToInt()}°C",
             fontSize = 15.sp,
             fontFamily = ubuntuBold,
             modifier = Modifier.width(35.dp),
             color = Color.White,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
         )
     }
 }
 
-fun formatFromDateToDay(dateString: String): String {
+fun formatDayName(dateString: String): String {
     val date = LocalDate.parse(dateString, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
     return date.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.ENGLISH)
         .replaceFirstChar { it.uppercaseChar() }

@@ -1,6 +1,7 @@
-package com.example.weather
+package com.example.weather.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -15,7 +16,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -24,69 +24,70 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.weather.data.WeatherModel
+import coil.compose.AsyncImage
+import com.example.weather.R
+import com.example.weather.domain.model.HourForecast
+import com.example.weather.domain.model.WeatherForecast
+import com.example.weather.ui.theme.ubuntuBold
+import com.example.weather.ui.theme.ubuntuRegular
+import kotlin.math.roundToInt
 
 @Composable
 fun TodayWeather(
-    currentDay: MutableState<WeatherModel>,
-    hourlyList: MutableState<List<WeatherModel>>,
-    isSearchDialogOpen: MutableState<Boolean>,
+    forecast: WeatherForecast,
     onClickSearch: () -> Unit,
 ) {
+    val current = forecast.current
+    val today = forecast.days.first()
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .padding(top = 45.dp)
             .fillMaxWidth()
-
     ) {
-
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 4.dp, top = 10.dp)
         ) {
-
             IconButton(
                 modifier = Modifier
                     .align(Alignment.TopStart)
                     .padding(start = 16.dp),
-                onClick = { onClickSearch.invoke() }
+                onClick = onClickSearch,
             ) {
                 Icon(
                     modifier = Modifier.size(20.dp),
                     painter = painterResource(id = R.drawable.search),
                     contentDescription = null,
-                    tint = Color.White
+                    tint = Color.White,
                 )
             }
 
-
             Text(
-                text = currentDay.value.city,
+                text = forecast.city,
                 fontSize = 20.sp,
                 color = Color.White,
                 fontFamily = ubuntuBold,
-                modifier = Modifier.align(Alignment.Center)
+                modifier = Modifier.align(Alignment.Center),
             )
-
 
             Row(
                 verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center,
                 modifier = Modifier
                     .align(Alignment.CenterEnd)
-                    .padding(end = 16.dp)
-
+                    .padding(end = 16.dp),
             ) {
                 Text(
-                    text = currentDay.value.minTemp.toFloat().toInt().toString() + "°/",
+                    text = "${today.minTempC.roundToInt()}°/",
                     fontSize = 20.sp,
                     color = Color.White,
                     fontFamily = ubuntuRegular,
                 )
-
                 Text(
-                    text = currentDay.value.maxTemp.toFloat().toInt().toString() + "°C",
+                    text = "${today.maxTempC.roundToInt()}°C",
                     fontSize = 20.sp,
                     color = Color.White,
                     fontFamily = ubuntuBold,
@@ -95,19 +96,19 @@ fun TodayWeather(
         }
 
         Text(
-            text = currentDay.value.currentTemp.toFloat().toInt().toString() + "°C",
+            text = "${current.tempC.roundToInt()}°C",
             fontSize = 43.sp,
             color = Color.White,
             fontFamily = ubuntuBold,
-            modifier = Modifier.padding(bottom = 2.dp)
+            modifier = Modifier.padding(bottom = 2.dp),
         )
 
         Text(
-            text = currentDay.value.condition,
+            text = current.condition,
             fontSize = 12.sp,
             color = Color.White,
             fontFamily = ubuntuBold,
-            modifier = Modifier.padding(top = 3.dp)
+            modifier = Modifier.padding(top = 3.dp),
         )
 
         LazyRow(
@@ -115,14 +116,43 @@ fun TodayWeather(
                 .padding(end = 20.dp, start = 20.dp, top = 30.dp)
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(16.dp))
-                .background(
-                    colorResource(id = R.color.browni)
-                ),
-            contentPadding = PaddingValues(horizontal = 8.dp)
+                .background(colorResource(id = R.color.browni)),
+            contentPadding = PaddingValues(horizontal = 8.dp),
         ) {
-            items(hourlyList.value) { item ->
-                ListItem(item, currentDay)
+            items(today.hours) { hour ->
+                HourlyItem(hour)
             }
         }
+    }
+}
+
+@Composable
+fun HourlyItem(hour: HourForecast) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .padding(2.dp)
+            .background(colorResource(id = R.color.browni)),
+    ) {
+        Text(
+            text = hour.time.substringAfter(" "), // "2026-07-19 14:00" -> "14:00"
+            fontSize = 10.sp,
+            color = Color.Gray,
+            fontFamily = ubuntuBold,
+            modifier = Modifier.padding(bottom = 4.dp),
+        )
+        AsyncImage(
+            model = weatherIconFor(hour.condition),
+            contentDescription = null,
+            modifier = Modifier
+                .padding(3.dp)
+                .size(27.dp),
+        )
+        Text(
+            text = "${hour.tempC.roundToInt()}°C",
+            color = Color.White,
+            fontFamily = ubuntuBold,
+            fontSize = 10.sp,
+        )
     }
 }
