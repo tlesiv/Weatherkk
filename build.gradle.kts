@@ -5,7 +5,7 @@ plugins {
 
 buildscript {
     dependencies {
-        classpath("com.android.tools.build:gradle:8.10.0-alpha02")
+        classpath("com.squareup:javapoet:1.13.0")
     }
 }
 
