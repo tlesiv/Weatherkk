@@ -1,6 +1,6 @@
 # Weather App 🌤
 
-A clean, elegant Android weather application built with **Jetpack Compose**, following modern **Clean Architecture + MVVM**. Shows current conditions, hourly and 7-day forecasts, and detailed metric cards in a cohesive warm-toned UI.
+A clean, elegant Android weather application built with **Jetpack Compose**, following modern **Clean Architecture + MVVM**. Shows current conditions, hourly and 3-day forecasts, and detailed metric cards in a cohesive warm-toned UI.
 
 ## 📸 Sneak Peek
 
