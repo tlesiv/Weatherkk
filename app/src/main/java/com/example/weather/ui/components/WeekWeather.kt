@@ -53,7 +53,7 @@ fun WeekWeather(days: List<DayForecast>) {
                     .padding(end = 8.dp),
             )
             Text(
-                text = "7-DAY FORECAST",
+                text = "3-DAY FORECAST",
                 fontSize = 12.sp,
                 fontFamily = ubuntuBold,
                 color = Color.Gray,
@@ -70,7 +70,7 @@ fun WeekWeather(days: List<DayForecast>) {
         days.forEachIndexed { index, day ->
             WeekWeatherRow(day)
 
-            if (index != days.size - 1) { // check for the last element
+            if (index != days.size - 1) {
                 HorizontalDivider(
                     color = Color.LightGray,
                     modifier = Modifier
