@@ -72,6 +72,10 @@ app/src/main/java/com/example/weather/
         └── WeatherApp.kt        // Root composable
 ```
 
+## ⬇️ Download
+
+Grab the latest APK from **[Releases](https://github.com/tlesiv/Weatherkk/releases)**.
+
 ## 🚀 Getting Started
 
 1. **Clone the repository.**
