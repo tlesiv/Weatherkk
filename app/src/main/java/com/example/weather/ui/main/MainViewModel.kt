@@ -47,6 +47,6 @@ class MainViewModel @Inject constructor(
     }
 
     private companion object {
-        const val DEFAULT_CITY = "Zolochiv"
+        const val DEFAULT_CITY = "Lviv"
     }
 }
