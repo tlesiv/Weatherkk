@@ -4,26 +4,21 @@ A clean, elegant Android weather application built with **Jetpack Compose**, fol
 
 ## 📸 Sneak Peek
 
-### Main Screen
-Current weather, today's hourly forecast and the weekly outlook at a glance.
+### App Overview
+Current weather, hourly strip, 3-day forecast and metric cards in a cohesive warm-toned UI.
 
-![Main Screen](screenshots/today.png)
+![App Overview](screenshots/mockup_main.png)
 
 ### City Search
 Minimal custom search dialog, styled to match the app's theme.
 
-![City Search](screenshots/search.png)
-
-### Detailed Metrics
-Feels-like, UV index, wind, precipitation, visibility, pressure, humidity and dew point — each with a short human-readable description.
-
-![Detailed Metrics](screenshots/cards.png)
+![City Search](screenshots/mockup_search.png)
 
 ## ⚡ Features
 
 - **🌤 Current Weather:** Temperature, condition, min/max for the day and "feels like" comparison.
 - **⏱ Hourly Forecast:** Scrollable hourly strip with custom condition icons.
-- **📅 7-Day Forecast:** Weekday names with condition icons and temperature ranges.
+- **📅 3-Day Forecast:** Weekday names with condition icons and temperature ranges.
 - **🃏 Metric Cards:** UV index, wind speed/gusts/direction, precipitation (snow-aware), visibility, pressure, humidity and dew point.
 - **🔍 City Search:** Instant forecast reload with keyboard search action support.
 - **🎨 Cohesive Design:** Warm brown-toned cards, custom Ubuntu typography, custom launcher icon.
@@ -46,35 +41,35 @@ The project is divided into three layers with dependencies pointing inwards — 
 
 ```text
 app/src/main/java/com/example/weather/
-├── WeatherApplication.kt        # @HiltAndroidApp entry point
-├── data/                        # Networking & data layer
+├── WeatherApplication.kt        // @HiltAndroidApp entry point
+├── data/                        // Networking & data layer
 │   ├── remote/
-│   │   ├── dto/                 # DTOs mirroring WeatherAPI JSON
-│   │   ├── WeatherApi.kt        # Retrofit interface
+│   │   ├── dto/                 // DTOs mirroring WeatherAPI JSON
+│   │   ├── WeatherApi.kt        // Retrofit interface
 │   │   ├── WeatherRemoteDataSource.kt
 │   │   ├── RetrofitWeatherRemoteDataSource.kt
-│   │   └── WeatherMapper.kt     # DTO → domain mapping
+│   │   └── WeatherMapper.kt     // DTO → domain mapping
 │   └── repository/
 │       └── WeatherRepositoryImpl.kt
 ├── di/
-│   └── AppModule.kt             # Hilt module (wiring the whole graph)
-├── domain/                      # Pure Kotlin, no framework imports
-│   ├── model/Weather.kt         # Typed domain models
+│   └── AppModule.kt             // Hilt module (wiring the whole graph)
+├── domain/                      // Pure Kotlin, no framework imports
+│   ├── model/Weather.kt         // Typed domain models
 │   ├── repository/WeatherRepository.kt
 │   └── usecase/GetForecastUseCase.kt
-└── ui/                          # Presentation layer
+└── ui/                          // Presentation layer
     ├── theme/Fonts.kt
-    ├── components/              # Reusable composable cards & rows
+    ├── components/              // Reusable composable cards & rows
     │   ├── DialogSearch.kt
-    │   ├── TodayWeather.kt      # (+ hourly strip)
+    │   ├── TodayWeather.kt      
     │   ├── WeekWeather.kt
     │   ├── WeatherCards.kt
     │   └── WeatherIcons.kt
     └── main/
         ├── MainActivity.kt
-        ├── MainViewModel.kt     # StateFlow<WeatherUiState>
+        ├── MainViewModel.kt     // StateFlow<WeatherUiState>
         ├── WeatherUiState.kt
-        └── WeatherApp.kt        # Root composable
+        └── WeatherApp.kt        // Root composable
 ```
 
 ## 🚀 Getting Started
